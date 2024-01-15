@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>URL Safety Checker</title>
+
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(135deg, #5e61ff, #ff66b2, #0099ff);
+        }
+
+        #container {
+            text-align: center;
+        }
+
+        #urlForm {
+            background: linear-gradient(135deg, #fff, #eee);
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
+        }
+
+        h1 {
+            color: #333;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+        }
+
+        label {
+            display: block;
+            margin: 10px 0;
+            font-size: 16px;
+            color: #555;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background: linear-gradient(135deg, #8c5eff, #ff66b2);
+            color: #fff;
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: linear-gradient(135deg, #753bff, #ff3399);
+        }
+
+        #result {
+            margin-top: 20px;
+            font-size: 18px;
+            color: #333;
+        }
+
+        img.sticker {
+            max-width: 100%;
+            height: auto;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <div id="urlForm">
+            <h1>URL Safety Checker</h1>
+            <form>
+                <label for="url">Enter URL:</label>
+                <input type="text" id="url" name="url" required>
+                <button type="button" onclick="checkURL()">Check</button>
+            </form>
+            <p id="result"></p>
+            <img class="sticker" src="https://placekitten.com/200/200" alt="Cute Sticker">
+        </div>
+    </div>
+
+    <script>
+        function checkURL() {
+            const url = document.getElementById('url').value;
+            fetch('/check_url', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: new URLSearchParams({
+                    'url': url,
+                }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                const resultElement = document.getElementById('result');
+                if (data.is_safe) {
+                    resultElement.textContent = 'The URL is safe.';
+                } else {
+                    resultElement.textContent = 'The URL is not safe.';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+    </script>
+</body>
+</html>
